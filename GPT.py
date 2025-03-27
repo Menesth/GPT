@@ -4,7 +4,7 @@ import torch.nn.functional as F
 import matplotlib.pyplot as plt
 from tqdm import trange
 
-with open('C:\\Users\\Menes\\Desktop\\Python\\Andrej_Karpathy\\tinyshakespeare.txt', 'r', encoding = 'utf-8') as f:
+with open('path\tinyshakespeare.txt', 'r', encoding = 'utf-8') as f:
     text = f.read()
 
 chars = sorted(list(set(text)))
@@ -23,7 +23,7 @@ torch.cuda.manual_seed(1337)
 torch.manual_seed(1337)
 VOCAB_SIZE = len(chars)
 BLOCK_SIZE = 128
-MAX_ITERS = 1000
+MAX_ITERS = 10000
 EVAL_INTERVAL = 500
 LR = 3e-4
 NB_HEADS = 6
