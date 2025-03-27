@@ -178,7 +178,7 @@ class GPT(nn.Module):
         return x
 ###____________________
 
-### Get model and print number of parameters ###
+### Get model ###
 model = GPT()
 model = model.to(device)
 nb_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
