@@ -185,6 +185,11 @@ nb_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
 print(f'number parameters= {nb_params}\n')
 
 ### Before training ###
+x, y = get_batch('train')
+logits = model.forward(x)
+loss = model.loss(x, y)
+print(f'Loss before training (about -ln(1/65, 65=VOCAB_SIZE=number of tokens)): {loss}\n')
+
 x = torch.zeros(size = (1, 1), dtype = torch.int64, device = device) # decode[0] = \n
 model.eval()
 print('Text generated before training:\n')
