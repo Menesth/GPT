@@ -178,49 +178,51 @@ class GPT(nn.Module):
         return x
 ###____________________
 
-### Get model ###
-model = GPT()
-model = model.to(device)
-nb_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
-print(f'number parameters= {nb_params}\n')
-
-### Before training ###
-x, y = get_batch('train')
-logits = model.forward(x)
-loss = model.loss(x, y)
-print(f'Loss before training (about -ln(1/65, 65=VOCAB_SIZE=number of tokens)): {loss}\n')
-
-x = torch.zeros(size = (1, 1), dtype = torch.int64, device = device) # decode[0] = \n
-model.eval()
-print('Text generated before training:\n')
-with torch.inference_mode():
-    print(decode(model.generate(x, nb_new = 500)[0].tolist()))
-###____________________
-
-### Training ###
-model.train()
-optim = torch.optim.Adam(model.parameters(), lr = LR)
-
-for iter in trange(MAX_ITERS):
-    xb, yb = get_batch('train')
-    loss = model.loss(xb, yb)
-
-    optim.zero_grad(set_to_none = True)
-    loss.backward()
-    optim.step()
-
-    if iter % EVAL_INTERVAL == 0:
-        losses = estimate_loss(model = model)
-        print(f'step {iter}: train loss {losses['train']:.4f}', f'step {iter}: val loss {losses['eval']:.4f}')
-
-losses = estimate_loss(model = model)
-print(f'step {iter}: train loss {losses['train']:.4f}', f'step {iter}: val loss {losses['eval']:.4f}')
-###____________________
-
-### After training ###
-x = torch.zeros(size = (1, 1), dtype = torch.int64, device = device)
-model.eval()
-print('Text generated after training:\n')
-with torch.inference_mode():
-    print(decode(model.generate(x, nb_new = 500)[0].tolist()))
-###____________________
+if __name__ == "__main__":
+    
+    ### Get model ###
+    model = GPT()
+    model = model.to(device)
+    nb_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
+    print(f'number parameters= {nb_params}\n')
+    
+    ### Before training ###
+    x, y = get_batch('train')
+    logits = model.forward(x)
+    loss = model.loss(x, y)
+    print(f'Loss before training (about -ln(1/65, 65=VOCAB_SIZE=number of tokens)): {loss}\n')
+    
+    x = torch.zeros(size = (1, 1), dtype = torch.int64, device = device) # decode[0] = \n
+    model.eval()
+    print('Text generated before training:\n')
+    with torch.inference_mode():
+        print(decode(model.generate(x, nb_new = 500)[0].tolist()))
+    ###____________________
+    
+    ### Training ###
+    model.train()
+    optim = torch.optim.Adam(model.parameters(), lr = LR)
+    
+    for iter in trange(MAX_ITERS):
+        xb, yb = get_batch('train')
+        loss = model.loss(xb, yb)
+    
+        optim.zero_grad(set_to_none = True)
+        loss.backward()
+        optim.step()
+    
+        if iter % EVAL_INTERVAL == 0:
+            losses = estimate_loss(model = model)
+            print(f'step {iter}: train loss {losses['train']:.4f}', f'step {iter}: val loss {losses['eval']:.4f}')
+    
+    losses = estimate_loss(model = model)
+    print(f'step {iter}: train loss {losses['train']:.4f}', f'step {iter}: val loss {losses['eval']:.4f}')
+    ###____________________
+    
+    ### After training ###
+    x = torch.zeros(size = (1, 1), dtype = torch.int64, device = device)
+    model.eval()
+    print('Text generated after training:\n')
+    with torch.inference_mode():
+        print(decode(model.generate(x, nb_new = 500)[0].tolist()))
+    ###____________________
